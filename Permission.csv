@@ -1,0 +1,6 @@
+Permission Set Label,Description,License
+Sales Cloud User ,Denotes that the user is a Sales Cloud user.,Sales User
+Salesforce CMS Integration Admin ,Gives the admin data access and the permissions to integrate Salesforce...,Cloud Integration User
+Salesforce Console User ,Enable Salesforce Console User,Sales Console User
+Slack Service User ,Lets users run the flows for swarming with Service Cloud for Slack.,Slack Service User
+Standard Einstein Activity Capture ,Access to Standard Einstein Activity Capture,Standard Einstein Activity Capture User
