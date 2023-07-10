@@ -1,0 +1,139 @@
+*** Settings ***
+
+Resource               ../Resources/common.robot
+Suite Setup            Setup Browser
+Suite Teardown         End suite
+Test Template          Entering A Contact With Data
+
+*** Test Cases ***
+Create Account Test Cases =>
+As an User, I should be able to create account and store infromation about customers and "Billing Address"
+Test1:
+    [Documentation]    Creating Account record...
+    [tags]             Account
+    Appstate           Home
+    LaunchApp          Sales
+    ClickText          Accounts
+    ClickText          New
+    UseModal           On
+    TypeText           Account Name                Ram
+    PickList           Sales Owner                 Shalini
+    VerifyText         Billing Address
+    TypeText           Billing Street              Plot No.212 Hitech City
+    TypeText           Billing City                Hyderabad
+    TypeText           Billing State/Province      Telangana
+    TypeText           Billing Zip/Postal Code     23135
+    TypeText           Billing Country             India
+    ClickText          Save                        partial_match=false
+    UseModal           Off
+    Sleep              1
+
+ validate "Billing Address"
+
+    ClickText          Accounts
+    ClickText          Ram
+    ClickText          Details
+    VerifyText         Ram                         anchor=Parent Account
+    VerifyText         Sales Owner
+    VerifyText         Address Information
+    VerifyText         Billing Address             anchor=System Information
+
+Repeat above test case by filling only "shipping address"
+Test2:
+    ClickText          Accounts
+    ClickText          New
+    UseModal           On
+    TypeText           Account Name                Nainika
+    PickList           Sales Owner                 Srikanth N
+    VerifyText         Shipping Address
+    TypeText           Shipping Street             Plot no. 21 begumpeth
+    TypeText           Shipping City               Hyderabad
+    TypeText           Shipping State/Province     Telangana
+    TypeText           Shipping Zip/Postal Code    45367
+    TypeText           Shipping Country            India
+    ClickText          Save                        partial_match=false
+    UseModal           Off
+    Sleep              1
+
+Validate the "Shipping Address"
+
+    ClickText          Accounts
+    ClickText          Nainika
+    ClickText          Details
+    VerifyText         Account Name
+    VerifyText         Sales Owner
+    VerifyText         Address Information
+    VerifyText         Shipping Address            anchor=System Information
+
+Test3:Repeat above test case by filling different addresses in "Billing address" and "Shipping address".
+filling "Billing Address"
+
+    ClickText          Accounts
+    ClickText          New
+    UseModal           On
+    TypeText           Account Name                Madhavika
+    PickList           Sales Owner                 Shalini
+    VerifyText         Billing Address
+    TypeText           Billing Street              Plot No. 45 Madhapur
+    TypeText           Billing City                Hyderabad
+    TypeText           Billing State/Province      Telangana
+    TypeText           Billing Zip/Postal Code     567438
+    TypeText           Billing Country             India
+
+Filling "Shipping Address"
+    VerifyText         Shipping Address
+    TypeText           Shipping Street             Plot no.45 Hussain Sagar
+    TypeText           Shipping City               Hyderabad
+    TypeText           Shipping State/Province     Telangana
+    TypeText           Shipping Zip/Postal Code    111111
+    TypeText           Shipping Country            India
+    ClickText          Save                        partial_match=false
+    UseModal           Off
+    Sleep              1
+
+validate "Biiling Address" and "Shipping Address"
+
+    ClickText          Accounts
+    ClickText          Madhavika
+    ClickText          Details
+    VerifyText         Account Name
+    VerifyText         Sales Owner
+    VerifyText         Address Information
+    VerifyText         Billing Address
+    VerifyText         Shipping Address            anchor= System Information
+
+For Update Account =>
+As an User, I should be able to Update existing account and update infromation about customers or indiviuals that we do bussiness with.
+Create Account:
+
+    ClickText          Accounts
+    ClickText          New
+    UseModal           On
+    TypeText           Account Name                Ganesh
+    TypeText           Phone                       6789654329
+    PickList           Sales Owner                 Shalini
+    ClickText          Save                        partial_match=false
+    UseModal           Off
+Create two contact
+    ClickText          Contacts
+    ClickText          New
+    UseModal           On
+    TypeText           Last Name                   Kale
+    ComboBox           Account Name                Ganesh
+    TypeText           Phone                       7865432456
+    ClickText          Save & New                       partial_match=false
+    TypeText           Last Name                   Mane
+    ComboBox           Account Name                Ganesh
+    TypeText           Phone                       7865432456
+    ClickText          Save                        partial_match=false
+    UseModal           Off
+
+Change the owner of account
+
+    ClickText    Accounts
+    ClickText    Ganesh
+    ClickText    Change Owner
+    ComboBox     Search Users      Vishnu Teja
+    ClickText    Submit
+    ClickText    Cancel
+    
