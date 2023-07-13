@@ -1,0 +1,139 @@
+*** Settings ***
+
+Resource               ../Resources/common.robot
+Suite Setup            Setup Browser
+Suite Teardown         End suite
+Test Template          Entering A Contact With Data
+
+*** Test Cases ***
+Create Account Test Cases =>
+As a User, I should be able to create an opportunity and tract my business deals on daily basis
+Test1:
+    [Documentation]    Creating Opportunity record...
+    [tags]             Opportunity
+    Appstate           Home
+    LaunchApp          Sales
+    ClickText          Opportunities
+    ClickText          New
+    UseModal           On
+    ClickText          CloudFulcrum
+    ClickText          Next
+    TypeText           Opportunity Name            Vaibhav
+    ComboBox           Search Accounts...          Wipro
+    PickList           Business Unit               Cloudfulcrum
+    Picklist           Sales                       Shalini
+    PickList           Stage                       Prospecting
+    ClickText          Close Date
+    ClickText          Today
+    ClickText          Save
+    ClickText          Cancel
+    UseModal           Off
+
+Repeat above test case without account name
+    ClickText          Opportunities
+    ClickText          New
+    UseModal           On
+    ClickText          CloudFulcrum
+    ClickText          Next
+    TypeText           Opportunity Name            Devansh
+    PickList           Business Unit               Cloudfulcrum
+    Picklist           Sales                       Shalini
+    PickList           Stage                       Prospecting
+    PickList           Sales Owner                 Shalini
+    ClickText          Close Date
+    ClickText          Today
+    ClickText          Account Name
+    ClickText          New Account
+    UseModal           Off
+    UseModal           On
+    TypeText           Account Name                Mahima
+    TypeText           Phone                       6755555455
+    PickList           Sales Owner                 Shalini                    anchor=newfield
+    ClickText          Save
+    UseModal           Off
+    ClickText          Save
+    UseModal           Off
+
+Update existing Oportunity
+
+    ClickText          Opportunities
+    ClickText          Gopal
+    ClickText          Details
+    ClickText          Edit                        anchor=Delete
+    UseModal           On
+    TypeText           Amount                      390000
+    PickList           Stage                       Prospecting
+    ClickText          Save
+    UseModal           Off
+    ClickText          Cancel
+    Clicktext          Delete
+    ClickText          Delete
+
+Add contact role on the opportunity to communicate with the opportunity share holders
+
+    ClickText          Opportunities
+    ClickText          Vaibhav
+    ClickText          Contact Roles
+    ClickText          Add Contact Roles
+    UseModal           On
+    ComboBox           Search Contacts...          Mohite
+    ClickText          Next
+    ClickText          Save
+    UseModal           Off
+
+Edit existing contactroles on the opportunity
+    ClickText          Opportunities
+    ClickText          Vaibhav
+    ClickText          Contact Roles
+    ClickText          Add Contact Roles
+    UseModal           On
+    ComboBox           Search Contacts...          Gaurav Mane
+    ClickText          Next
+    ClickText          Save
+    UseModal           Off
+
+Add partners to the opportunity
+    ClickText          Opportunities
+    ClickText          Vaibhav
+Two Partners: Notworking
+    ClickText          Partners
+    ClickText          New
+    UseModal           On
+    ComboBox           Search Accounts...          Ganesh
+    UseTable           Primary
+    ClickCell          r2c3
+    ClickText          Agency                      anchor=Account
+    ComboBox           Search Accounts...          Wipro
+    ClickCell          r3c3
+    ClickText          Developer                   anchor=Account
+    ClickText          Save
+
+Add list of products to the opportunity
+
+    ClickText          Opportunities
+    VerifyText         Recently Viewed
+    ClickText          Vaibhav
+    ClickText          Products
+    ClickText          Choose Price Book
+    Usemodal           On
+    PickList           Price Book                  Apple products
+    ClickText          Save
+    ClickText          Add Products
+    ComboBox           Search Products...          Apple earpods
+    ComboBox           Search Products...          Enterprise Subscription
+    ComboBox           Search Products...          Mac book pro 19
+    ClickText          Next
+# Product added
+    UseTable           Item Number
+    ClickCell          r1c2
+    TypeText           Quantity                    1.00
+    ClickCell          r1c3
+    ClickCell          r2c2
+    TypeText           Quantity                    1.00
+    ClickCell          r2c3
+    ClickCell          r3c2
+    TypeText           Quantity                    1.00
+    ClickCell          r3c3
+    ClickText          Save
+    UseModal           Off                         1
+   
