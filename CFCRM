@@ -1,0 +1,169 @@
+*** Settings ***
+
+Resource                   ../Resources/common.robot
+Suite Setup                Setup Browser
+Suite Teardown             End suite
+Test Template              Entering A Contact With Data
+
+*** Test Cases ***
+
+As a user I should able to create a Cloudfulcrum lead and track if resources are allocated to the projects.
+
+    [Documentation]        Creating lead record...
+    [tags]                 Lead
+    Appstate               Home
+    LaunchApp              Sales
+
+    #Create Lead for cfcrm
+
+    ClickText              Leads
+    VerifyText             Recently Viewed             timeout=120s
+    ClickText              New                         anchor=Import
+    ClickText              Cloudfulcrum
+    ClickText              Next
+    VerifyText             Lead Information
+    UseModal               On                          # Only find fields from open modal dialog
+    PickList               Sales Owner                 Shalini
+    Picklist               Salutation                  Ms.
+    TypeText               First Name                  Asia
+    TypeText               Last Name                   Khan
+    TypeText               Email                       asia.khan@gmail.com         Rating
+    Picklist               Lead Status                 Open
+    TypeText               Phone                       +888888                     First Name
+    TypeText               Company                     AA Architect                Last Name
+    PickList               Lead Source                 Web
+    PickList               Industry                    Agriculture
+    PickList               Country                     India
+    PickList               Company Size                1 - 20 employees
+    PickList               Lead Type                   Customer
+    TypeText               Title                       Designer                    Address Information
+    TypeText               Website                     https://www.artchitect.com/
+    ClickText              Save                        partial_match=False
+    UseModal               Off
+    Sleep                  2
+    ClickText              Details                     anchor=Chatter
+    VerifyText             Ms. Asia Khan
+    VerifyText             Shalini                     anchor=Sales Owner
+    VerifyField            Company                     AA Architect
+     VerifyField            Website                     https://www.artchitect.com/
+
+    #Convert a Lead into Account, Contact, Opportunity
+
+    ClickText              Converted
+    Clicktext              Select Converted Status
+    ClickText              Create new
+    ClickText              AA Architect-
+    TypeText               Opportunity Name*           AA Architect-Opp
+    ClickText              Convert                     anchor=Account
+    UseModal               On
+    ClickText              Go to Leads
+    UseModal               Off
+
+    #Verify converted Account, Contact and Opportunity
+
+    ClickText              Accounts
+    VerifyText             AA Architect
+    ClickText              Contacts
+    VerifyText             Asia Khan
+    ClickText              Opportunitie
+    VerifyText             AA Architect-Opp
+
+Navigate to Contracts and fill all the fields and contract status should be draft and save the record.
+
+
+    ClickText              Contracts
+    VerifyText             Recently Viewed             timeout=120s
+    ClickText              New
+    UseModal               On
+    ClickText              Account Name
+    ComboBox               Search Accounts...          AA Architect
+    TypeText               Contract Start Date         09/06/2023
+    PickList               Status                      Draft
+    TypeText               Billing Contact Email       test@gmail.com
+    TypeText               Contract Term (months)      12
+    ClickText              Scope/Milestone/Deliverables
+    ClickElement           //div[contains(@class, 'slds-rich-text-area__content')]
+    TypeText               xpath\=//div[contains(@class, 'ql-editor')]//p          SampleText
+    TypeText               Payment Terms               Dollers
+    TypeText               Billing Email List          test1@gmail.com
+    TypeText               Customer Signed Date        08/06/2024
+    ClickText              Save                        partial_match=False
+    UseModal               Off
+
+    #Note the record id of the contract
+
+    ClickText              Details                     anchor=Related
+    ${contract_number}=    Get Text                    xpath=(//span[contains(@class, 'field-label')]/../following-sibling::div[contains(@class, 'form-element')])[3]
+    Log                    ${contract_number}
+
+    #Add Contract to the Opportunity by filling Contract field on Opportunity.
+
+
+    ClickText              Opportunity
+    VerifyText             Recently Viewed             timeout=120s
+    ClickText              Opportunities
+    ClickText              AA Architect-Opp
+    ClickText              Details
+    ClickText              Edit                        partial_match=False
+    UseModal               On
+    ComboBox               Search Contracts...         ${contract_number}
+    TypeText               *Amount                     10000
+    ClickText              Save                        partial_match=False
+    UseModal               Off
+
+    #Move Opportunity Stage to 'Closed Won' and save the record.
+
+    ClickText              Closed
+    ClickText              Select Closed Stage
+    UseModal               On
+    DropDown               Select a closed stage...    Closed Won
+    ClickText              Save
+    UseModal               Off
+
+    #Validate the contract details have been copied to the Project on the Opportunity.
+
+
+    ClickText              Project AA Architect-Opp
+    VerifyText             Project AA Architect-Opp
+    VerifyText             AA Architect
+    ClickText              Open AA Architect Preview
+    VerifyText             ${contract_number}
+    VerifyText             Shalini
+    VerifyText             AA Architect-Opp
+    VerifyText             test@gmail.com
+
+    #Create a Employee --> Search for custom object eployee and create a new record.
+
+
+    ClickText              Employee
+    VerifyText             Recently Viewed             timeout=120s
+    ClickText              More
+    ClickText              Employees
+    ClickText              New
+    UseModal               On
+    TypeText               Employee Name               Emp1
+    TypeText               Email Id                    emp1@gmail.com
+    PickList               Department                  IT
+    PickList               Project Status              On Bench
+    ClickText              Save                        partial_match=False
+    UseModal               Off
+
+    #Create a Project resource record and fill the Required fields.
+
+    ClickText              Project Resources
+    VerifyText             Recently Viewed             timeout=120s
+    ClickText              More
+    ClickText              Project Resources
+    ClickText              New
+    UseModal               On
+    ComboBox               Search Projects...          Project AA Architect-Opp
+    ComboBox               Search Employees...         Emp1
+    ClickText              Save                        partial_match=False
+    UseModal               Off
+
+
+    #Verify that the Project resource is active or not.
+
+    #This active Checkbox Will be Active/Inactive Based on the Project Start date and end date.
+
+    VerifyText             Active
