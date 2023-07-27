@@ -1,0 +1,91 @@
+*** Settings ***
+
+Resource               ../Resources/common.robot
+Suite Setup            Setup Browser
+Suite Teardown         End suite
+*** Test Cases ***
+Create Account data
+
+    [Documentation]    Create Account
+    [tags]             Account
+    Appstate           Home
+    LaunchApp          Sales
+    ClickText          Accounts
+    ClickText          New
+    UseModal           On
+    TypeText           Account Name                Rohini
+    PickList           Sales Owner                 Shalini
+    TypeText           Billing Street              Plot No.212 Hitech City
+    TypeText           Billing City                Hyderabad
+    TypeText           Billing State/Province      Telangana
+    TypeText           Billing Zip/Postal Code     23135
+    TypeText           Billing Country             India
+    ClickText          Save                        partial_match=false
+    UseModal           Off
+    Sleep              1
+
+validate "Billing Address"
+
+    ClickText          Accounts
+    ClickText          Rohini
+    ClickText          Details
+    VerifyText         Rohini                      anchor=Parent Account
+    VerifyText         Shalini
+    VerifyText         Address Information
+    VerifyText         Billing Address             anchor=Address Information
+
+Repeat above test case by filling only "shipping address"
+
+    ClickText          Accounts
+    ClickText          Rohini
+    ClickText          Details
+    ClickText          Edit Shipping Address
+    TypeText           Shipping Street             Plot no. 21 begumpeth
+    TypeText           Shipping City               Hyderabad
+    TypeText           Shipping State/Province     Telangana
+    TypeText           Shipping Zip/Postal Code    45367
+    TypeText           Shipping Country            India
+    ClickText          Save                        partial_match=false
+    UseModal           Off
+
+Validate the "Shipping Address"
+
+    ClickText          Accounts
+    ClickText          Rohini
+    ClickText          Details
+    VerifyText         Rohini                      anchor= Account Name
+    VerifyText         Shalini
+    VerifyText         Address Information
+    VerifyText         Shipping Address            anchor=Billing Address
+
+Repeat above test case by filling different addresses in "Billing address" and "Shipping address".filling "Billing Address"
+
+    ClickText          Accounts
+    ClickText          Rohini
+    ClickText          Details
+    ClickText          Edit Billing Address
+    TypeText           Billing Street              Plot No. 45 Madhapur Durgam cheru
+    TypeText           Billing City                Hyd
+    TypeText           Billing State/Province      Telangana
+    TypeText           Billing Zip/Postal Code     6788964
+    TypeText           Billing Country             India
+    VerifyText         Shipping Address
+    TypeText           Shipping Street             Plot no.45 Hussain Sagar
+    TypeText           Shipping City               Hyderabad
+    TypeText           Shipping State/Province     Telangana
+    TypeText           Shipping Zip/Postal Code    111111
+    TypeText           Shipping Country            India
+    ClickText          Save                        partial_match=false
+    UseModal           Off
+
+verify test Cases
+
+    ClickText          Accounts
+    ClickText          Rohini
+    ClickText          Details
+    VerifyText         Rohini                      anchor=Account Name
+    VerifyText         Shalini
+    VerifyText         Address Information
+    VerifyText         Billing Address
+    VerifyText         Shipping Address
+
